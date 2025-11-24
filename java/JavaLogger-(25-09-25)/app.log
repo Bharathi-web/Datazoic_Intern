@@ -1,0 +1,2 @@
+2025-09-25 18:09:29 ERROR TryCatchException:26 - This is an ERROR message.
+2025-09-25 18:26:24 ERROR TryCatchException:30 - This is an ERROR message.java.util.InputMismatchException
