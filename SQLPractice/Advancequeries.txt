@@ -1,0 +1,75 @@
+use SQLTraining;
+go
+
+-------------------------------------------------Insert into table(unmatched) by using joins--------------------------------------------------
+insert into ClassB (Studentname, Authority, Phone) select a.Studentname, a.Authority, a.Phone
+from ClassA a left join ClassB b on a.Studentname = b.Studentname and a.Authority = b.Authority
+and a.Phone = b.Phone where b.Studentname is null;
+
+
+----------- Working Hours of Employee ---------------------
+
+declare @sdate date='2025-09-17';
+declare @edate date='2025-09-21';
+select (datediff(day,@sdate,@edate)+1);
+
+
+declare @sdate date='2025-09-17';
+declare @edate date='2025-09-21';
+select (datediff(day,@sdate,@edate)+1)
+- (datediff(week,@sdate,@edate) *2)
+- Case when datename(weekday,@sdate)='sunday' then 1 else 0 end
+- Case when datename(weekday,@edate)='saturday' then 1 else 0 end as workingdays;
+
+---------------Looping-------------------------------------
+----while loop(to insert values into Registration table)
+
+declare @Counter int = 1;
+
+while @Counter <= 5
+begin
+    insert into EventManagement.Registrations (EventId, UserId, TicketType, PaymentStatus)
+    values (@Counter + 9, @Counter + 1, 'Standard', 'Paid');
+	set @Counter = @Counter + 1;
+end
+
+select * from EventManagement.Registrations;
+
+
+
+---cursor loop (display each parcipant name and role)
+
+declare @Name nvarchar(20), @Role nvarchar(30);
+declare participantCursor cursor for
+select Name, Role from EventManagement.Participants;
+open participantCursor;
+fetch next from participantCursor into @Name, @Role;
+-- Loop through all rows
+while @@FETCH_STATUS = 0
+begin
+    print 'Name: ' + @Name + ', Role: ' + @Role;
+	fetch next from participantCursor into @Name, @Role;
+end
+
+close participantCursor;
+deallocate participantCursor;
+
+-----try catch operation-------------------------
+create procedure Updated_ParticipantSafely2 as begin
+    begin try
+        begin transaction;
+		update EventManagement.Participants set Name = 'Vino' where UserId = 'NAME';
+        commit;
+        print 'Update successful.';
+    end try
+    begin catch
+        rollback;
+        print 'Error occurred: ' + ERROR_MESSAGE();
+    end catch
+end;
+
+exec Updated_ParticipantSafely2;
+
+select * from EventManagement.Participants;
+
+

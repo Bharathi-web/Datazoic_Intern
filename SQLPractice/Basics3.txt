@@ -1,0 +1,511 @@
+
+--using db and creating schema
+
+
+use SQLTraining;
+go
+CREATE schema EventManagement;
+go
+
+ --ALTER TABLE SchemaName.TableName ALTER COLUMN ColumnName NewDataType [NULL | NOT NULL];
+ --INSERT INTO SchemaName.TableName (Column1, Column2, ...) VALUES (Value1, Value2, ...);
+ --CREATE NONCLUSTERED INDEX idx_employee_name ON HumanResources.Employees (FirstName ASC, LastName ASC);
+
+
+
+
+--Creating Tables in a Database.....................
+
+-------------------------- table 1 Organizers Table----------------------------------
+
+create table EventManagement.Organizers(
+OrganizerID int primary key identity(1,1),
+Name varchar(25) not null,
+Email nvarchar(40) unique,
+Phone int,
+CompanyName nvarchar(30)
+);
+
+select * from EventManagement.Organizers;
+EXEC sp_columns 'EventManagemet.Organizers';
+-- Select table with specified fields
+select OrganizerID,Name, Email,Phone,CompanyName from EventManagement.Organizers;
+
+go
+--Altering Table Datatype 
+
+alter table EventManagement.Organizers 
+alter column Phone bigint;
+
+-- insert into Organizers
+
+insert into EventManagement.Organizers(Name,Email,Phone,CompanyName) values ('Bharathi', 'Bharathi@gmail.com', 8438933808, 'SVRT');
+insert into EventManagement.Organizers(Name,Email,Phone,CompanyName) values ('Yoga', 'yoga@gmail.com', 8438933798, 'EmptyOrg');
+insert into EventManagement.Organizers(Name, Email, Phone, CompanyName) values
+('Priya', 'priya@eventhub.com', 9123456780, 'EventHub'),
+('Arun', 'arun@celebrateit.com', 9876543210, 'CelebrateIt'),
+('Meena', 'meena@planitright.com', 9988776655, 'PlanItRight'),
+('Karthik', 'karthik@eventify.com', 9090909090, 'Eventify'),
+('Divya', 'divya@funzone.org', 8123456789, 'FunZone'),
+('Ravi', 'ravi@organizeit.com', 8001234567, 'OrganizeIt'),
+('Sneha', 'sneha@happeningevents.com', 8222334455, 'HappeningEvents'),
+('Vijay', 'vijay@nextgenevents.com', 8444556677, 'NextGenEvents'),
+('Lakshmi', 'lakshmi@eliteevents.com', 8555667788, 'EliteEvents');
+
+-- Updating Values in a Table
+update EventManagement.Organizers set Name='Ram' where OrganizerID=5;
+
+-- Deleting values in a Table
+delete EventManagement.Organizers where OrganizerID=13;
+
+--Indexing on Organizer ID and phone
+create nonclustered index idx_Organizers on EventManagement.Organizers(OrganizerID, Phone);
+
+
+------------------------------------ table 2 Venues Table-------------------------------------------
+
+create table EventManagement.Venues(
+VenuesId int primary Key identity(1,1),
+VenueName nvarchar(50) not null,
+VenueLocation nvarchar(50),
+Capacity int,
+FacilitiesAvailable nvarchar(300),
+);
+select * from EventManagement.Venues;
+-- Select with specified fields
+select VenuesId,VenueName,VenueLocation,VenueCapacity,FacilitiesAvailable from EventManagement.Venues;
+
+-- insert into Venues
+
+insert into EventManagement.Venues (VenueName,VenueLocation,Capacity,FacilitiesAvailable) values ('TVH Park', 'Chennai', 500,'Cleaning, Managing, Catering');
+insert into EventManagement.Venues(VenueName,VenueLocation,Capacity,FacilitiesAvailable) values 
+('SKCL Tech', 'Vellore', 1000, 'Order,Maintainance'),
+('Krishnan Mahal', 'chennai',1000,'Order,Maintainance,Cleaning');
+
+--update value
+update EventManagement.Venues set FacilitiesAvailable='Orders,Foods,RoomFacility' where VenuesId=3;
+insert into EventManagement.Venues (VenueName,VenueLocation,Capacity,FacilitiesAvailable) values ('TVH Park', 'Chennai', 500,'Cleaning, Managing, Catering');
+
+--delete value
+delete EventManagement.Venues where VenuesId=4;
+
+--indexing
+create nonclustered index idx_Venues on EventManagement.Venues(VenueName);
+
+--Rename Column Name
+Exec sp_rename 'EventManagement.Venues.Capacitiy', 'VenueCapacity', 'column'; 
+Exec sp_rename 'EventManagement.Venues.Capacity', 'VenueCapacity', 'column';
+
+--Alter Character Length of VenueLocation
+alter table EventManagement.Venues 
+alter column VenueLocation nvarchar(20);
+
+
+
+------------------------------------ table 3 Events Table------------------------------------------------
+create table EventManagement.Events(
+EventId int primary key identity(1,1),
+EventName nvarchar(40) not null,
+EventType  nvarchar(40),
+EventDate date,
+EventStartTime time,
+Category nvarchar(100),
+AdditionalNeeds nvarchar(300),
+OrganizerID int foreign key references EventManagement.Organizers(OrganizerID),
+VenuesId int foreign key references EventManagement.Venues(VenuesId),
+CreatedTime datetime default getdate(),
+UpdatedTime datetime default getdate()
+);
+select * from EventManagement.Events;
+
+-- select using specific columns
+select EventId, EventName, EventType, EventDAte, EventStartTime, Category, AdditionalNeeds, OrganizerID, VenuesId, CreatedTime, UpdatedTime from EventManagement.Events;
+
+-- insert into Events
+insert into EventManagement.Events(EventName,EventType,EventDate,EventStartTime,Category,AdditionalNeeds,OrganizerID,VenuesId) values 
+('Townhall Meeting', 'Conference','2025-09-10','11.00:00','Office meetup','Food and Transport', 3,1);
+
+insert into EventManagement.Events (
+    EventName, EventType, EventDate, EventStartTime, Category, AdditionalNeeds, OrganizerID, VenuesId
+) values
+('Tech Conference 2025', 'Conference', '2025-10-15', '09:00:00', 'Technology', 'Projector, Wi-Fi, Catering', 5, 2),
+('Annual Gala Night', 'Social', '2025-12-20', '19:00:00', 'Entertainment', 'Stage setup, Lighting, Sound system', 11, 3),
+('Startup Pitch Fest', 'Business', '2025-11-05', '10:30:00', 'Entrepreneurship', 'Whiteboards, Refreshments', 6, 1),
+('AI Workshop', 'Educational', '2025-09-25', '14:00:00', 'Artificial Intelligence', 'Laptops, Internet access', 3, 2),
+('Music Fest', 'Concert', '2025-10-30', '18:00:00', 'Music', 'Security, Food stalls, Parking', 5, 1);
+
+insert into EventManagement.Events(EventName,EventType,EventDate,EventStartTime,Category,AdditionalNeeds,OrganizerID,VenuesId) values 
+('Townhall Meeting', 'Conference','2025-09-10','11:00:00','Office meetup','Food and Transport', 3,1);
+
+
+-- Update Value in Table
+Update EventManagement.Events set EventStartTime='10:00:00' where EventId=10;
+
+--Delete row in a table
+delete EventManagement.Events where EventId=18;
+
+--Alter the table
+Alter table EventManagement.Events
+Alter column EventName varchar(40) not null;
+
+-- Indexing
+create index idx_Events on EventManagement.Events(EventDate);
+
+
+
+---------------------------------------table 4 EventFacilities------------------------------------------------
+create table EventManagement.EventFacilities(
+FacilityId int primary key identity(1,1),
+FacilityName nvarchar(300)
+);
+select * from EventManagement.EventFacilities;
+
+--Select With Specified columns
+select FacilityId,FacilityName from EventManagement.EventFacilities;
+select FacilityId, AvailableFacility from EventManagement.EventFacilities;
+
+-- insert into EventFacilities
+insert into EventManagement.EventFacilities (FacilityName) values
+('Projector'),
+('Wi-Fi'),
+('Catering Services'),
+('Stage Setup'),
+('Lighting System'),
+('Sound System'),
+('Security'),
+('Parking Area'),
+('Food Stalls'),
+('Internet Access');
+insert into EventManagement.EventFacilities (FacilityName) values('Projector');
+
+-- Update column to be wi-fi
+update EventManagement.EventFacilities set FacilityName='Wifi' where FacilityId=11;
+
+-- delete row 
+delete EventManagement.EventFacilities where FacilityId=11;
+
+--Rename Column name
+exec sp_rename 'EventManagement.EventFacilities.FacilityName', 'AvailableFacility', 'column';
+
+--Alter table as unique value
+alter table EventManagement.EventFacilities
+add constraint uq_EventFacilities unique(AvailableFacility);
+
+--- drop Constraint
+Alter table EventManagement.EventFacilities 
+drop constraint uq_EventFacilities;
+
+--indexing
+create index idx_facility on EventManagement.EventFacilities(AvailableFacility);
+
+
+----------------------------------------table 5 Facilities Mapping----------------------------------------------
+create table EventManagement.Facilities(
+EventId int foreign key references EventManagement.Events(EventId),
+FacilityId int foreign key references EventManagement.EventFacilities(FacilityId)
+);
+select * from EventManagement.Facilities;
+-- select with specific name
+select EventId,FacilityId from EventManagement.Facilities;
+
+-- insert into Facilities
+
+-- Tech Conference 2025 (EventId = 10)
+insert into EventManagement.Facilities (EventId, FacilityId) values
+(10, 1), 
+(10, 2), 
+(10, 3); 
+
+-- Annual Gala Night (EventId = 11)
+insert into EventManagement.Facilities (EventId, FacilityId) values
+(11, 4), 
+(11, 5), 
+(11, 6); 
+
+-- Startup Pitch Fest (EventId = 12)
+insert into EventManagement.Facilities (EventId, FacilityId) values
+(12, 2), 
+(12, 9); 
+
+-- AI Workshop (EventId = 13)
+insert into EventManagement.Facilities (EventId, FacilityId) values
+(13, 1), 
+(13, 10); 
+
+
+-- Music Fest (EventId = 14)
+insert into EventManagement.Facilities (EventId, FacilityId) values
+(14, 6), 
+(14, 7), 
+(14, 8), 
+(14, 9); 
+
+-- update
+update EventManagement.Facilities set EventId=11 where FacilityId=10;
+
+
+-----------------------------------------table 6 Participants------------------------------------------------------
+create table EventManagement.Participants(
+UserId int primary key identity(1,1),
+Name nvarchar(20) not null,
+Email nvarchar(30),
+Phone int,
+Role nvarchar(30)
+);
+select * from EventManagement.Participants;
+
+--select with specified value
+select UserId,Name,Email,Role from EventManagement.Participants;
+
+insert into EventManagement.Participants (Name, Email, Phone, Role) values
+('Aarav', 'aarav@example.com', 9876543210, 'Attendee'),
+('Priya', 'priya@example.com', 9123456789, 'Speaker'),
+('Karan', 'karan@example.com', 9988776655, 'Volunteer'),
+('Sneha', 'sneha@example.com', 8001234567, 'Organizer'),
+('Vikram', 'vikram@example.com', 8222334455, 'Attendee');
+
+--Update name
+Update EventManagement.Participants set Name='Tarun' where Name='Vikram';
+
+-- Alter table
+Alter Table EventManagement.Participants
+alter column Email nvarchar(30) not null;
+--Alter the table datatype
+alter table EventManagement.Participants 
+alter column Phone bigint;
+
+-- index
+create index idx_role on EventManagement.Participants(Role);
+
+
+
+------------------------------------------ table 7 Registrations----------------------------------------------------
+create table EventManagement.Registrations(
+RegistrationId int primary key identity(1,1),
+EventId int foreign key references EventManagement.Events(EventId),
+UserId int foreign key references EventManagement.Participants(UserId),
+TicketType nvarchar(30),
+PaymentStatus nvarchar(30),
+RegisterAt date default getdate()
+);
+select * from EventManagement.Registrations;
+
+--select with specific colun
+select RegistrationId, EventId,UserId,TicketType,PaymentStatus,RegisterAt from EventManagement.Registrations;
+
+
+-- insert into Registrations
+insert into EventManagement.Registrations (EventId, UserId, TicketType, PaymentStatus) values
+(10, 2, 'Standard', 'Paid'),
+(11, 5, 'VIP', 'Paid'),
+(12, 3, 'Standard', 'Pending'),
+(13, 4, 'Early Bird', 'Paid'),
+(14, 6, 'Standard', 'Cancelled');
+
+insert into EventManagement.Registrations (EventId, UserId, TicketType, PaymentStatus) values
+(10, 2, 'Standard', 'Paid');
+
+EXEC sp_help 'EventManagement.Registrations';
+	
+--Alter Table date into datetime
+ALTER TABLE EventManagement.Registrations
+DROP CONSTRAINT DF__Registrat__Regis__711464B0;
+
+------------------------------------------------------
+ALTER TABLE EventManagement.Registrations
+DROP CONSTRAINT DF_Registrations_RegisterAt;
+
+ALTER TABLE EventManagement.Registrations
+ALTER COLUMN RegisterAt datetime ;
+
+ALTER TABLE EventManagement.Registrations
+ADD CONSTRAINT DF_Registrations_RegisterAt DEFAULT GETDATE() FOR RegisterAt;
+
+
+--indexing
+create nonclustered index  idx_reg on EventManagement.Registrations(TicketType,PaymentStatus);
+
+
+
+--------------------------------------------- table 8 Sponsers----------------------------------------------------------
+create table EventManagement.Sponsers(
+SponserId int primary key identity(1,1),
+Name varchar(20),
+Email nvarchar(30),
+Phone int,
+Contribution decimal(12,2),
+EventId int foreign key references EventManagement.Events(EventId)
+);
+select * from EventManagement.Sponsers;
+
+--select with specified column
+select name from EventManagement.Sponsers;
+
+--INSERT into table
+insert into EventManagement.Sponsers (Name, Email, Phone, Contribution, EventId)
+values 
+('TechCorp', 'contact@techcorp.com', 9876543210, 50000.00, 10),
+('GreenWorld', 'info@greenworld.org', 9123456789, 30000.00, 12),
+('EduSpark', 'hello@eduspark.edu', 9988776655, 45000.00, 14),
+('HealthPlus', 'support@healthplus.com', 9090909090, 60000.00, 13);
+insert into EventManagement.Sponsers (Name, Email, Phone, Contribution, EventId)
+values 
+('TechCorp', 'contact@techcorp.com', 9876543210, 50000.00, 10);
+
+--Alter datatype
+alter table EventManagement.Sponsers
+alter column Phone bigint;
+
+--delete
+delete EventManagement.Sponsers where SponserId=6;
+
+--indexing
+create index idx_Name on EventManagement.Sponsers(Name,Email);
+
+
+---------------------------------------------- table 9 Feedback-----------------------------------------------------------
+create table EventManagement.Feedback(
+FeedbackId int primary key identity(1,1),
+EventId int foreign key references EventManagement.Events(EventId),
+UserId int foreign key references EventManagement.Participants(UserId),
+Rating int check(Rating between 1 and 5),
+Comments nvarchar(300)
+);
+select *  from EventManagement.Feedback;
+
+--select with specific column
+select FeedbackId,EventId,UserId,Rating,Comments from EventManagement.Feedback;
+-- insert into EventManagement.Feedback
+insert into EventManagement.Feedback(EventId,UserId,Rating,Comments) values
+(10,2,5,'nope');
+insert into EventManagement.Feedback(EventId,UserId,Rating,Comments) values
+(11,3,4,'Good'),
+(12,4,4,'Avg'),
+(13,5,5,'nice');
+insert into EventManagement.Feedback(EventId,UserId,Rating,Comments) values
+(14,2,1,'NotGood');
+insert into EventManagement.Feedback(EventId,UserId,Rating,Comments) values
+(17,2,2,'Dislike');
+
+--Update value
+update EventManagement.Feedback set Rating=3 where EventId=12;
+
+--indexing
+create index idx_Ratings on EventManagement.Feedback(Rating);
+
+--delete
+delete EventManagement.Feedback;
+
+
+
+
+------------------------- To View ALl Tables in a Database..........................
+
+EXEC sp_tables;
+
+-- All Tables
+SELECT
+    t.name AS Table_Name
+FROM
+    sys.tables AS t
+WHERE
+    SCHEMA_NAME(t.schema_id) = 'EventManagement';
+
+
+--------------------------Desc table---------------------------------
+SELECT
+    COLUMN_NAME,
+    DATA_TYPE,
+    CHARACTER_MAXIMUM_LENGTH,
+    IS_NULLABLE
+FROM
+    INFORMATION_SCHEMA.COLUMNS
+WHERE
+    TABLE_SCHEMA = 'EventManagement' AND TABLE_NAME = 'Organizers';
+
+-------------------------Joins---------------------------------------
+
+---left joins on organizers and events table.
+select o.Name,o.Email,o.Phone,o.CompanyName,e.EventName,e.EventType from EventManagement.Organizers as o left join EventManagement.Events as e on o.OrganizerID=e.OrganizerID;
+
+--right joins on venues and events table.
+select v.VenueName, v.VenueLocation,v.VenueCapacity, v.FacilitiesAvailable, e.EventName,e.EventDAte from EventManagement.Venues as v right join EventManagement.Events as e on v.VenuesId=e.VenuesId;
+
+--full join on facilities and eventfacilities(3 tables)
+select ef.AvailableFacility, e.EventName, e.EventType from EventManagement.EventFacilities AS ef
+full join EventManagement.Facilities AS f ON ef.FacilityId = f.FacilityId
+full join EventManagement.Events AS e ON f.EventId = e.EventId;
+
+--inner join
+select p.Name,p.Email,p.Role,r.TicketType,r.PaymentStatus from EventManagement.Participants as p inner join EventManagement.Registrations as r on p.UserId=r.UserId;
+
+-- cross join
+select p.Name,e.EventName
+from EventManagement.Participants AS p
+cross join EventManagement.Events AS e;
+
+--self join
+select s1.Name AS Sponser1, s2.Name AS Sponser2, s1.EventId, s1.Contribution AS Sponser1Contribution, s2.Contribution AS Sponser2Contribution from EventManagement.Sponsers AS s1
+join EventManagement.Sponsers AS s2 ON s1.EventId = s2.EventId and s1.SponserId <> s2.SponserId;
+
+-----------------------------------------like------------------------------------
+select Name from EventManagement.Sponsers where Name like 'g%';
+
+select Email from EventManagement.Sponsers where Email like '%.com';
+
+select Phone from EventManagement.Sponsers where CAST(Phone as varchar) like '_________9';
+
+select EventName from EventManagement.Events where EventName like '%Tech%';
+
+select Name from EventManagement.Sponsers where Name like '[ge]%'
+
+select Name from EventManagement.Sponsers where Name like '[^ge]%'
+
+-------------------------------nolock------------------------------------------
+
+select Name,Email,Phone,CompanyName from EventManagement.Organizers with (nolock);
+
+select Name,Email,Phone,CompanyName from EventManagement.Organizers;
+
+----------read uncommitted-------------
+set transaction isolation level read uncommitted;
+select * from EventManagement.Events;
+
+
+------------------------order by--------------------
+select Rating from EventManagement.Feedback order by Rating;
+select Rating from EventManagement.Feedback order by Rating desc;
+
+
+--------------------------commit and rollback------------------------------------------
+
+begin transaction;
+update EventManagement.Participants set Name='vino' where UserId=1;
+commit;
+if @@error<>0
+rollback;
+print 'Error occures';
+
+delimitter $$
+CREATE PROCEDURE GetCustomers()
+
+begin
+update EventManagement.Participants set Name='vino' where UserId=3;
+if @@error=0
+commit;
+else
+rollback;
+print 'Error occures';
+
+end $$
+delimitter;
+
+
+
+
+
+
+
+
+
+

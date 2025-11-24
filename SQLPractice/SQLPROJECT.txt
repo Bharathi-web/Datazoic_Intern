@@ -1,0 +1,99 @@
+-----------------------------using SQLTraining DB-----------------------------------
+use SQLTraining;
+go
+
+-----------------------------created Schema as FL-----------------------------------
+create schema FL;
+go
+
+---------------------------creating User's table--------------------------------------
+create table FL.Users (
+UserID int primary key identity(1,1),
+FullName nvarchar(50) not null,
+Email nvarchar(60) unique not null,
+Password nvarchar(60) not null,
+Role nvarchar(20) check (Role in ('SuperAdmin','SupportAdmin','Driver','Customer')),
+CreatedAt datetime default getdate()
+);
+
+select UserID,FullName,Password,Role,CreatedAt from FL.Users;
+
+--------------------insert into Users
+insert into FL.Users (FullName,Email,Password,Role) values 
+('Admin1','12345','Super@fleet.com','SuperAdmin'),
+('Admin2','5678','Support@fleet.com','SupportAdmin'),
+('Ram','8901','Ram@fleet.com','Driver'),
+('priya','2345','Priya@fleet.com','Driver')
+;
+insert into FL.Users(FullName,Email,Password,Role) values('yoga','6789','Yoga@fleet.com','Customer');
+
+---------------------------creating Vehicle's table----------------------------------------
+create table FL.Vehicles (
+VehicleID int primary key identity(1,1),
+VehicleNumber nvarchar(50) unique not null,
+VehicleType nvarchar(50) not null,
+Capacity decimal(10,2) not null, --in kg or tons
+Status nvarchar(20) check(status in ('Available','In Transit','Maintenance')),
+CreatedAt datetime default getdate()
+);
+
+select VehicleNumber,VehicleType,Capacity,Status from FL.Vehicles;
+
+insert into FL.Vehicles(VehicleNumber,VehicleType,Capacity,Status) values
+('2A789','Lorry',10.5,'Available'),
+('78A678','Tempo',5.2,'Available'),
+('876BG','Bike',2,'In Transit'),
+('847HG7','Lorry',20,'Maintenance');
+
+--------------------------creating Booking table-------------------------------------------------
+create table FL.Bookings (
+BookingID int primary key identity(1,1),
+CustomerID int not null foreign key references FL.Users(UserID),
+VehicleID int null foreign key references FL.Vehicles(VehicleID),
+PickupLocation nvarchar(200) not null,
+DropLocation nvarchar(200) not null,
+Status nvarchar(20) check (status in('Pending','Assigned','In Transit','Completed','Cancelled')),
+BookingDate datetime default getdate()
+);
+
+select CustomerID,VehicleID,PickupLocation,DropLocation,Status from FL.Bookings;
+
+--Alter
+Alter table FL.Bookings
+Alter column VehicleID nvarchar(20);
+
+----insert into bookings
+insert into FL.Bookings(CustomerID,VehicleID,PickupLocation,DropLocation,Status) values
+(5,1,'Chennai','Bangalore','Assigned');
+
+---------------------------creating DriverAssignments table--------------------------------------------
+create table FL.DriverAssignments (
+AssignmentID int primary key identity(1,1),
+DriverID int not null foreign key references FL.Users(UserID),
+BookingID int not null foreign key references FL.Bookings(BookingID),
+AssignedAt datetime default getdate()
+);
+
+--------------------------creating Trips table----------------------------------------------------------
+create table FL.Trips (
+TripID int primary key identity(1,1),
+AssignmentID int not null foreign key references FL.DriverAssignments(AssignmentID),
+StartTime datetime null,
+EndTime datetime null,
+DistanceTravelled decimal(10,2) null, -- in km
+FuelUsed decimal(10,2) null, -- in liters
+Status nvarchar(20), check (Status != 'Completed' OR (StartTime is not null and EndTime is not null and DistanceTravelled is not null))
+);
+
+update trips set status='In Transit', StartTime=GetDate() where tripID=1;
+
+--------------------------creating Payment table--------------------------------------------------------------
+create table FL.Payments (
+PaymentID int primary key identity(1,1),
+BookingID int not null foreign key references FL.Bookings(BookingID),
+Amount decimal(10,2) not null,
+PaymentMethod nvarchar(50) check (PaymentMethod in('Cash','Card','Online')),
+PaymentStatus nvarchar(20) check (PaymentStatus in('Pending','Paid','Failed')),
+PaidAt datetime null
+);
+
