@@ -1,0 +1,79 @@
+{
+    "data" : [
+            {
+                "title": "Emp Id :",
+                "id": "eid",
+                "inputType": "text",
+                "mandatory": true,
+                "enable": true
+            },
+            {
+                "title": "Emp Name :",
+                "id": "ename",
+                "inputType": "text",
+                "charLength": 25,
+                "mandatory": true,
+                "enable": true
+            },
+            {
+                "title": "Email :",
+                "id": "email",
+                "inputType": "email",
+                "mandatory": true,
+                "enable": true
+            },
+            {
+                "title": "Phone :",
+                "id": "phno",
+                "inputType": "number",
+                "mandatory": false,
+                "enable": true
+            },
+            {
+                "title": "Gender :",
+                "id": "gender",
+                "inputType": "select",
+                "mandatory": true,
+                "enable": true,
+                "options": [
+                    {
+                        "text": "male",
+                        "value": "male"
+                    },
+                    {
+                        "text": "female",
+                        "value": "female"
+                    },
+                    {
+                        "text": "other",
+                        "value": "other"
+                    }
+                ]
+            },
+            {
+                "title": "Comments :",
+                "id": "cmt",
+                "inputType": "textarea",
+                "mandatory": false,
+                "enable": true
+            },
+            {
+                "title": "Action :",
+                "id": "action",
+                "inputType": "checkbox",
+                "mandatory": true, 
+                "enable": true,
+                "options": [
+                    {
+                        "text": "New Task",
+                        "value": "newtask"
+                    },
+                    {
+                        "text": "Modify Task",
+                        "value": "modifytask"
+                    }
+                ]
+            }
+        ]
+    }
+        
