@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white shadow-2xl rounded-2xl p-6 w-full max-w-md">
+        <h1 class="text-2xl font-bold text-center mb-8">&#128204; To-Do List</h1>
+        <div class="flex mb-8">
+            <input id="taskInput" type="text" placeholder="Add Your task..."
+                class="flex-1 p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button onclick="addTask()" class="bg-blue-500 text-white px-4 rounded-r-lg hover:bg-blue-600">Add</button>
+        </div>
+
+        <ul id="taskList" class="space-y-2"></ul>
+
+        <div class="mt-4 flex justify-between text-sm font-semibold">
+            <span>Total Tasks: <span id="totalCount">0</span></span>
+            <span>Remaining: <span id="remainingCount">0</span></span>
+        </div>
+
+        <div class>
+            <button onclick="restoreLastDeletedTask()"
+                class="mt-8 px-2 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 float-left">Restore Task
+            </button>
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript" src="Todojs.js"></script>
+</body>
+
+</html>
