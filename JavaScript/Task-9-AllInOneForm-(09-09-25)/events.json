@@ -1,0 +1,160 @@
+{
+    "form": {
+        "title": "Event Management Form",
+        "fields": [
+            {
+                "label": "Events Name",
+                "key": "eventName",
+                "inputType": "text",
+                "placeholder": "Enter event name",
+                "enable": true,
+                "required": true
+            },
+            {
+                "label": "Event Type",
+                "key": "eventType",
+                "inputType": "singleSelect",
+                "options": [
+                    "Conference",
+                    "Workshop",
+                    "Seminar",
+                    "Concert"
+                ],
+                "enable": true,
+                "required": true,
+                "nestedFields": {
+                    "Conference": [
+                        {
+                            "label": "Number of Days",
+                            "key": "conferenceDays",
+                            "inputType": "number",
+                            "enable": true
+                        }
+                    ],
+                    "Concert": [
+                        {
+                            "label": "Performer Name",
+                            "key": "performer",
+                            "inputType": "text",
+                            "enable": true
+                        },
+                        {
+                            "label": "Genre",
+                            "key": "musicGenre",
+                            "inputType": "checkbox",
+                            "options": [
+                                "Rock",
+                                "Pop",
+                                "Classical",
+                                "Fork"
+                            ],
+                            "enable": true
+                        }
+                    ]
+                }
+            },
+            {
+                "label": "Event Date",
+                "key": "eventDate",
+                "inputType": "date",
+                "enable": true,
+                "required": true
+            },
+            {
+                "label": "Facilities",
+                "key": "facilities",
+                "inputType": "multiSelect",
+                "options": [
+                    "Food",
+                    "Transport",
+                    "Accommodation",
+                    "WiFi",
+                    "Parking"
+                ],
+                "enable": true
+            },
+            {
+                "label": "-------Organizer Details-------",
+                "key": "organizer",
+                "inputType": "group",
+                "enable": true,
+                "fields": [
+                    {
+                        "label": "Organizer Name",
+                        "key": "organizerName",
+                        "inputType": "text",
+                        "enable": true,
+                        "charLength": 25,
+                        "required": true
+                    },
+                    {
+                        "label": "Organizer Email",
+                        "key": "organizerEmail",
+                        "inputType": "email",
+                        "enable": true,
+                        "required": true
+                    },
+                    {
+                        "label": "Organizer Phone",
+                        "key": "organizerPhone",
+                        "inputType": "tel",
+                        "enable": true,
+                        "required": true,
+                        "validation": {
+                            "pattern": "^\\d{10}$",
+                            "message": "Phone number must be exactly 10 digits."
+                        }
+                    }
+                ]
+            },
+            {
+                "label": "Ticket Category",
+                "key": "ticketCategory",
+                "inputType": "radio",
+                "options": [
+                    "Free",
+                    "VIP",
+                    "General"
+                ],
+                "enable": true,
+                "nestedFields": {
+                    "VIP": [
+                        {
+                            "label": "VIP Price",
+                            "key": "vipPrice",
+                            "inputType": "number",
+                            "placeholder": "Enter amount",
+                            "enable": true
+                        }
+                    ],
+                    "General": [
+                        {
+                            "label": "General Price",
+                            "key": "generalPrice",
+                            "inputType": "number",
+                            "placeholder": "Enter amount",
+                            "enable": true
+                        }
+                    ]
+                }
+            },
+            {
+                "label": "Event Banner",
+                "key": "eventBanner",
+                "inputType": "file",
+                "fileTypes": [
+                    "image/png",
+                    "image/jpeg"
+                ],
+                "enable": true
+            },
+            {
+                "label": "Additonal Needs",
+                "key": "needs",
+                "inputType": "textarea",
+                "enable": true,
+                "placeholder": "Type your needs..."
+            }
+        ]
+    }
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Ajax crud operation</title>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+  <div class="w-full max-w-5xl bg-white rounded-xl shadow p-6">
+    <h2 class="text-2xl font-bold text-center text-blue-600 mb-4">USER INFORMATION</h2>
+
+    <div class="flex gap-3 justify-center mb-4">
+      <button id="getBtn" 
+            class="px-4 py-2 bg-green-400 border border-black hover:bg-green-600 text-white rounded shadow">GET</button>
+      <button id="postBtn" 
+            class="px-4 py-2 bg-blue-400 border border-black hover:bg-blue-600 text-white rounded">POST</button>
+      <button id="putBtn" 
+            class="px-4 py-2 bg-yellow-400 border border-black hover:bg-yellow-600 text-white rounded">PUT</button>
+      <button id="deleteBtn" 
+            class="px-4 py-2 bg-red-400 border border-black hover:bg-red-600 text-white rounded">DELETE</button>
+    </div>
+
+    <div id="output" class="border rounded bg-gray-50 p-4 h-96 overflow-auto text-sm">
+     
+      <div id="info" class="text-gray-600 mb-2">Click to list user details.</div>
+      <div id="tableWrap"></div>
+      <pre id="raw" class="mt-3 hidden whitespace-pre-wrap"></pre>
+    </div>
+  </div>
+
+<script type="text/javascript" script src="Script.js">
+    
+
+
+</script>
+</body>
+</html>
