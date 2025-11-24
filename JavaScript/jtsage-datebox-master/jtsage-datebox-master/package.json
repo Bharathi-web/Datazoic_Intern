@@ -1,0 +1,106 @@
+{
+  "name": "jtsage-datebox",
+  "title": "JTSage DateBox",
+  "description": "Plugin to provide a CSS framework agnostic Date and Time Picker",
+  "version": "5.3.3",
+  "supports": {
+    "bootstrap-v4": "4.3.1",
+    "bootstrap-v3": "3.4.1",
+    "zurb-foundation": "6.5.3",
+    "bulma": "0.8.0",
+    "jquery-mobile": "1.4.5",
+    "fomantic-ui": "2.7.2",
+    "uikit": "3.2.0",
+    "noframe": "0.0.1"
+  },
+  "supportMap": {
+    "bootstrap": "bootstrap-v3",
+    "bootstrap4": "bootstrap-v4",
+    "foundation6": "zurb-foundation",
+    "bulma": "bulma",
+    "jqm": "jquery-mobile",
+    "fomanticui": "fomantic-ui",
+    "uikit": "uikit",
+    "noframe": "noframe"
+  },
+  "prettyMap": {
+    "bootstrap": "Twitter Bootstrap",
+    "bootstrap4": "Twitter Bootstrap",
+    "foundation6": "Zurb Foundation",
+    "bulma": "Bulma.io",
+    "jqm": "jQueryMobile",
+    "fomanticui": "FomanticUI",
+    "uikit": "UIKit",
+    "noframe": "No Framework"
+  },
+  "prettyMapMode": {
+    "calbox": "CalBox",
+    "datebox": "DateBox & TimeBox & DurationBox & DateTimeBox",
+    "slidebox": "SlideBox",
+    "flipbox": "FlipBox & TimeFlipBox & DurationFlipBox & DateTimeFlipBox"
+  },
+  "homepage": "http://datebox.jtsage.dev/",
+  "author": {
+    "name": "JTSage and other contributors",
+    "url": "https://github.com/jtsage/jtsage-datebox/blob/master/AUTHORS.txt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jtsage/jtsage-datebox.git"
+  },
+  "bugs": "https://github.com/jtsage/jtsage-datebox/issues",
+  "license": "MIT",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  },
+  "scripts": {
+    "lint-datebox": "eslint --cache --cache-location .cache/.eslintcache src/js",
+    "lint-build": "eslint --cache --cache-location .cache/.eslintcache build",
+    "lint-server": "eslint --cache --cache-location .cache/.eslintcache node_builder/builderForm.js node_builder/builderServer.js",
+    "lint-docs": "yamllint doc_builder/data/*.yml",
+    "lint-all": "npm-run-all lint-datebox lint-build lint-server lint-docs",
+    "lint": "npm-run-all lint-all",
+    "authors": "git log --pretty=\"%<(30)%aN <%aE>\" | sort | uniq -c |  sort -Vf | sort -gr > AUTHORS.txt",
+    "build-latest": "node build/build-datebox.js",
+    "build-release": "node build/build-datebox.js release",
+    "build-i18n": "node build/build-i18n.js",
+    "build-docs": "node build/build-docs.js",
+    "build-jsdoc": "jsdoc -c .jsdoc.json",
+    "build-builder": "node build/prep-builder.js",
+    "update-builder": "node build/prep-builder.js",
+    "build": "npm-run-all lint-build build-latest",
+    "prerelease": "npm-run-all lint-all authors",
+    "release": "npm-run-all lint-all build-release build-i18n build-docs build-jsdoc build-builder",
+    "count-datebox": "cloc --exclude-dir=external src/js",
+    "count-all": "cloc --exclude-list-file=.clocignore .",
+    "count": "npm-run-all count-all count-datebox",
+    "docs": "npm-run-all build-docs build-jsdoc",
+    "serve": "http-server doc_builder/dist",
+    "start": "http-server doc_builder/dist",
+    "servebuild": "node node_builder/builderServer.js",
+    "test": "npm-run-all lint-all"
+  },
+  "devDependencies": {
+    "archiver": "^3.1.1",
+    "cloc": "^2.5.0",
+    "eslint": "^5.16.0",
+    "gettext-parser": "^4.0.2",
+    "glob": "^7.1.4",
+    "http-server": "^0.11.1",
+    "husky": "^1.3.1",
+    "ink-docstrap": "^1.3.2",
+    "js-beautify": "^1.10.2",
+    "js-object-pretty-print": ">=0.2.0",
+    "js-yaml": "^3.13.1",
+    "jsdoc": "^3.6.3",
+    "node-gettext": ">=0.2.14",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^2.7.1",
+    "showdown": "^1.9.0",
+    "uglify-js": "^3.6.1",
+    "yaml-lint": "^1.2.4"
+  },
+  "dependencies": {}
+}
