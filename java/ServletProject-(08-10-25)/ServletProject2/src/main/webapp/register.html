@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Register</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script>
+        function validateForm() {
+            const username = document.forms["registerForm"]["username"].value.trim();
+            const password = document.forms["registerForm"]["password"].value.trim();
+            const fullname = document.forms["registerForm"]["fullname"].value.trim();
+            const phonenumber = document.forms["registerForm"]["phonenumber"].value.trim();
+            const email = document.forms["registerForm"]["email"].value.trim();
+            const phoneRegex = /^\d{10}$/;
+            const emailRegex = /^[\w\.-]+@[\w\.-]+\.\w{2,}$/;
+ 
+            if (username.length < 4) {
+                alert("Username must be at least 4 characters");
+                return false;
+            }
+            if (password.length < 6) {
+                alert("Password must be at least 6 characters");
+                return false;
+            }
+            if (phonenumber && !phoneRegex.test(phonenumber)) {
+                alert("Phone number must be 10 digits");
+                return false;
+            }
+            if (email && !emailRegex.test(email)) {
+                alert("Please enter a valid email address");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+	<div
+		class="bg-cover bg-center bg-fixed min-h-screen flex items-center justify-center">
+		<div class="bg-white mx-4 p-8 rounded shadow-md w-full max-w-md">
+			<h2 class="text-2xl font-bold text-center mb-6">Register</h2>
+			<form name="registerForm" action="RegisterServlet" method="post"
+				onsubmit="return validateForm();">
+				<div class="mb-4">
+					<label class="block font-semibold text-gray-700 mb-1"
+						for="username">Username</label> <input
+						class="border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+						type="text" id="username" name="username" required>
+				</div>
+				<div class="mb-4">
+					<label class="block font-semibold text-gray-700 mb-1"
+						for="password">Password</label> <input
+						class="border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+						type="password" id="password" name="password" required>
+				</div>
+				<div class="mb-4">
+					<label class="block font-semibold text-gray-700 mb-1"
+						for="fullname">Full Name</label> <input
+						class="border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+						type="text" id="fullname" name="fullname" required>
+				</div>
+				<div class="mb-4">
+					<label class="block font-semibold text-gray-700 mb-1"
+						for="phonenumber">Phone Number</label> <input
+						class="border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+						type="text" id="phonenumber" name="phonenumber" maxlength="10"
+						minlength="10" pattern="\d{10}">
+				</div>
+				<div class="mb-6">
+					<label class="block font-semibold text-gray-700 mb-1" for="email">Email</label>
+					<input
+						class="border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+						type="email" id="email" name="email" required>
+				</div>
+				<input
+					class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+					type="submit" value="Register">
+			</form>
+			<br> <a class="text-blue-500 hover:underline" href="index.html">Back
+				to Home</a>
+		</div>
+	</div>
+</body>
+</html>

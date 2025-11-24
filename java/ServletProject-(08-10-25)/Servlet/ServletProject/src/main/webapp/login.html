@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Login</title>
+  <script>
+    // when page loads, check URL parameters
+    window.onload = function() {
+      const params = new URLSearchParams(window.location.search);
+      const msg = params.get("msg");
+      const error = params.get("error");
+ 
+      if (msg) {
+        document.getElementById("message").innerHTML =
+          "<p style='color:green;'>Registered successfully! Please login.</p>";
+      }
+      if (error) {
+        document.getElementById("message").innerHTML =
+          "<p style='color:red;'>Invalid username or password.</p>";
+      }
+    };
+  </script>
+</head>
+<body>
+<h2>Login</h2>
+  <form action="login" method="post">
+      Username: <input type="text" name="username" required><br><br>
+      Password: <input type="password" name="password" required><br><br>
+      <input type="submit" value="Login">
+  </form>
+ 
+  <!-- message area -->
+  <div id="message"></div>
+ 
+  <br>
+  <a href="index.html">Back to Home</a>
+
+</body>
+</html>
